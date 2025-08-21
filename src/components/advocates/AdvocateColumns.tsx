@@ -3,6 +3,7 @@
 import { Advocate } from "@/types";
 import { ColumnDef } from "@tanstack/react-table";
 import { Chip } from "@/components/ui/Chip";
+import { formatPhoneNumber, formatExperience } from "@/utils/formatters";
 
 export const advocateColumns: ColumnDef<Advocate>[] = [
     {
@@ -24,6 +25,24 @@ export const advocateColumns: ColumnDef<Advocate>[] = [
         accessorKey: "degree",
         header: "Degree",
         enableSorting: false,
+    },
+    {
+        accessorKey: "yearsOfExperience",
+        header: "Years of Experience",
+        enableSorting: true,
+        cell: ({ row }) => {
+            const years = row.getValue("yearsOfExperience") as number;
+            return formatExperience(years);
+        },
+    },
+    {
+        accessorKey: "phoneNumber",
+        header: "Phone Number",
+        enableSorting: false,
+        cell: ({ row }) => {
+            const phoneNumber = row.getValue("phoneNumber") as number;
+            return formatPhoneNumber(phoneNumber);
+        },
     },
     {
         accessorKey: "specialties",
@@ -50,14 +69,5 @@ export const advocateColumns: ColumnDef<Advocate>[] = [
             );
         },
     },
-    {
-        accessorKey: "yearsOfExperience",
-        header: "Years of Experience",
-        enableSorting: true,
-    },
-    {
-        accessorKey: "phoneNumber",
-        header: "Phone Number",
-        enableSorting: false,
-    },
+
 ];
