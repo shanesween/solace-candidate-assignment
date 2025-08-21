@@ -23,5 +23,20 @@ export interface Advocate {
     specialties: string[];
     yearsOfExperience: number;
     phoneNumber: number;
-    createdAt: string;
+    createdAt: Date;
+}
+
+export interface AdvocateSearchResult {
+    id: number;
+    firstName: string;
+    lastName: string;
+    city: string;
+    degree: string;
+    yearsOfExperience: number;
+    fullName: string;
+    displayText: string;
+}
+
+export interface SearchResponse {
+    data: AdvocateSearchResult[];
 }
