@@ -1,14 +1,52 @@
 "use client";
+import { useEffect, useRef } from "react";
 import { DataTable } from "../shared/DataTable";
 import { advocateColumns } from "./AdvocateColumns";
-import { useAdvocates } from "@/hooks/useAdvocates";
+import { useInfiniteAdvocates } from "@/hooks/useInfiniteAdvocates";
 
 interface AdvocateTableProps {
     className?: string;
 }
 
 export function AdvocateTable({ className = "" }: AdvocateTableProps) {
-    const { data, isLoading, error, refetch } = useAdvocates();
+
+    const {
+        data,
+        isLoading,
+        error,
+        fetchNextPage,
+        hasNextPage,
+        isFetchingNextPage,
+        refetch
+    } = useInfiniteAdvocates({});
+
+    const loadMoreRef = useRef<HTMLDivElement>(null);
+
+    // Flatten paginated data
+    const advocates = data?.pages.flatMap((page: any) => page.data) || [];
+
+
+    // Intersection Observer for infinite scroll
+    useEffect(() => {
+        const observer = new IntersectionObserver(
+            (entries) => {
+                if (entries[0].isIntersecting && hasNextPage && !isFetchingNextPage) {
+                    fetchNextPage();
+                }
+            },
+            {
+                threshold: 0.1,
+                rootMargin: '100px' // Trigger 100px before element is fully visible
+            }
+        );
+
+        if (loadMoreRef.current) {
+            observer.observe(loadMoreRef.current);
+        }
+
+        return () => observer.disconnect();
+    }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
+
 
     if (isLoading) {
         return (
@@ -32,17 +70,20 @@ export function AdvocateTable({ className = "" }: AdvocateTableProps) {
         );
     }
 
-    const advocates = data || [];
-
     return (
-        <div className={className}>
-            <DataTable
-                columns={advocateColumns}
-                data={advocates}
-                searchKey="global"
-                searchPlaceholder="Search advocates by name, city, degree, or specialties..."
-                className="w-full"
-            />
+        <div className={`flex flex-col h-full ${className}`}>
+            <h1 className="text-2xl font-bold mb-6 flex-shrink-0">Solace Advocates</h1>
+            <div className="flex-1 min-h-0">
+                <DataTable
+                    columns={advocateColumns}
+                    data={advocates}
+                    loadMoreRef={loadMoreRef}
+                    isLoadingMore={isFetchingNextPage}
+                    hasMore={hasNextPage}
+                    noMoreMessage="No more advocates to load"
+                    className="h-full"
+                />
+            </div>
         </div>
     );
 }
