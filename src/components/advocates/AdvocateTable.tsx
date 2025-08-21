@@ -1,14 +1,17 @@
 "use client";
 import { useEffect, useRef } from "react";
+import { useRouter } from "next/navigation";
 import { DataTable } from "../shared/DataTable";
 import { advocateColumns } from "./AdvocateColumns";
 import { useInfiniteAdvocates } from "@/hooks/useInfiniteAdvocates";
+import type { Advocate } from "@/types";
 
 interface AdvocateTableProps {
     className?: string;
 }
 
 export function AdvocateTable({ className = "" }: AdvocateTableProps) {
+    const router = useRouter();
 
     const {
         data,
@@ -24,6 +27,11 @@ export function AdvocateTable({ className = "" }: AdvocateTableProps) {
 
     // Flatten paginated data
     const advocates = data?.pages.flatMap((page: any) => page.data) || [];
+
+    // Handle row click navigation
+    const handleRowClick = (advocate: Advocate) => {
+        router.push(`/advocates/${advocate.id}`);
+    };
 
 
     // Intersection Observer for infinite scroll
@@ -77,6 +85,7 @@ export function AdvocateTable({ className = "" }: AdvocateTableProps) {
                 <DataTable
                     columns={advocateColumns}
                     data={advocates}
+                    onRowClick={handleRowClick}
                     loadMoreRef={loadMoreRef}
                     isLoadingMore={isFetchingNextPage}
                     hasMore={hasNextPage}
