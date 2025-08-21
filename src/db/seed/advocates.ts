@@ -1,5 +1,7 @@
-import db from "..";
 import { advocates } from "../schema";
+import type { InferInsertModel } from "drizzle-orm";
+
+type NewAdvocate = InferInsertModel<typeof advocates>;
 
 const firstNames = [
   "James", "Mary", "John", "Patricia", "Robert", "Jennifer", "Michael", "Linda",
@@ -69,7 +71,7 @@ const randomSpecialty = () => {
   return specialties.slice(random1, random2);
 };
 
-export function generateRandomAdvocate() {
+export function generateRandomAdvocate(): NewAdvocate {
   const firstName = firstNames[Math.floor(Math.random() * firstNames.length)];
   const lastName = lastNames[Math.floor(Math.random() * lastNames.length)];
   const city = cities[Math.floor(Math.random() * cities.length)];
@@ -90,7 +92,7 @@ export function generateRandomAdvocate() {
 }
 
 // Generate 1000 advocates using the generateRandomAdvocate function
-const advocateData = [];
+const advocateData: NewAdvocate[] = [];
 for (let i = 0; i < 1000; i++) {
   advocateData.push(generateRandomAdvocate());
 }
