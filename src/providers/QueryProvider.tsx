@@ -18,6 +18,7 @@ export function QueryProvider({ children }: QueryProviderProps) {
                         gcTime: 10 * 60 * 1000, // 10 minutes (formerly cacheTime)
                         retry: (failureCount, error) => {
                             // Don't retry on 4xx errors
+                            // TODO: configure a retry strategy that is more robust
                             if (error instanceof Error && error.message.includes('4')) {
                                 return false;
                             }
