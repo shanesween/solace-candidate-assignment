@@ -55,7 +55,6 @@ This technical assessment involved transforming a basic advocate table applicati
 #### Frontend Performance
 
 - **Implemented infinite scroll** with intersection observer for efficient data loading
-- **Added debounced search queries** (300ms) to reduce API call frequency
 - **Used TanStack Query** for intelligent caching and background data synchronization
 - **Created viewport-constrained tables** that scroll within fixed containers rather than causing page-level scrolling
 
@@ -77,6 +76,7 @@ This technical assessment involved transforming a basic advocate table applicati
 #### Performance & Infrastructure
 
 - **Caching layer for frequently accessed data** - Redis implementation for search results and advocate profiles to reduce database load
+- **Add debounced search queries** - Deduce API call frequency
 - **Proper indexing on searchable fields** - Database indexes on firstName, lastName, city, and degree fields for faster query performance
 - **Column-level sorting and filtering** - Advanced table functionality allowing users to sort and filter by multiple criteria
 
