@@ -2,17 +2,8 @@
 import db from "../../../../db";
 import { advocates } from "../../../../db/schema";
 import { ilike, or } from "drizzle-orm";
-import type { AdvocateSearchResult, SearchResponse } from "../../../../types";
+import type { AdvocateSearchData, AdvocateSearchResult, SearchResponse } from "../../../../types";
 import { PostgresJsDatabase } from "drizzle-orm/postgres-js";
-
-interface DatabaseSearchResult {
-  id: number;
-  firstName: string;
-  lastName: string;
-  city: string;
-  degree: string;
-  yearsOfExperience: number;
-}
 
 /**
  * Advocate Search API
@@ -53,7 +44,7 @@ export async function GET(request: Request): Promise<Response> {
           ilike(advocates.degree, searchTerm)
         )
       )
-      .limit(maxResults)) as DatabaseSearchResult[];
+      .limit(maxResults)) as AdvocateSearchData[];
 
     const searchResults: AdvocateSearchResult[] = results.map((advocate) => ({
       ...advocate,
