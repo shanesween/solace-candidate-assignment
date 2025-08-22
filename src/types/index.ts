@@ -1,4 +1,3 @@
-
 // Common API response types
 export interface ApiResponse<T> {
     data: T;
@@ -26,13 +25,19 @@ export interface Advocate {
     createdAt: Date;
 }
 
-export interface AdvocateSearchResult {
+
+
+// Minimal advocate data for search queries (performance optimized)
+export interface AdvocateSearchData {
     id: number;
     firstName: string;
     lastName: string;
     city: string;
     degree: string;
     yearsOfExperience: number;
+}
+
+export interface AdvocateSearchResult extends AdvocateSearchData {
     fullName: string;
     displayText: string;
 }
