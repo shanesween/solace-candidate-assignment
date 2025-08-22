@@ -1,4 +1,4 @@
-import { useInfiniteApiQuery } from '@/hooks/useInfiniteApiQuery';
+import { useInfiniteApiQuery } from './useInfiniteApiQuery';
 import { Advocate } from '../types';
 
 interface UseInfiniteAdvocatesParams {
