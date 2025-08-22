@@ -1,11 +1,11 @@
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { PaginatedResponse } from '../types';
 
-interface UseInfiniteApiQueryParams<T> {
-  queryKey: (string | Record<string, any>)[];
-  endpoint: string;
-  limit?: number;
+interface UseInfiniteApiQueryOptions<T> {
   enabled?: boolean;
+  limit?: number;
+  staleTime?: number;
+  gcTime?: number;
 }
 
 interface FetchPageParams {
@@ -19,6 +19,7 @@ const fetchPage = async <T>({
   limit,
   endpoint
 }: FetchPageParams): Promise<PaginatedResponse<T>> => {
+  // TODO: add type safety for the URLSearchParams and support for other query params
   const params = new URLSearchParams();
 
   params.append('limit', limit.toString());
@@ -33,18 +34,28 @@ const fetchPage = async <T>({
   return response.json();
 };
 
-export const useInfiniteApiQuery = <T>({
-  queryKey,
-  endpoint,
-  limit = 100,
-  enabled = true,
-}: UseInfiniteApiQueryParams<T>) => {
+export const useInfiniteApiQuery = <T>(
+  endpoint: string,
+  options: UseInfiniteApiQueryOptions<T> = {}
+) => {
+  if (!endpoint) {
+    throw new Error('No endpoint provided');
+  }
+
+  const {
+    enabled = true,
+    limit = 100,
+    staleTime = 5 * 60 * 1000, // 5 minutes
+    gcTime = 10 * 60 * 1000, // 10 minutes
+  } = options;
   return useInfiniteQuery({
-    queryKey: [...queryKey, { limit }],
+    queryKey: [endpoint, { limit }],
     queryFn: ({ pageParam }: { pageParam: string | null }) =>
       fetchPage<T>({ pageParam, limit, endpoint }),
     getNextPageParam: (lastPage) => lastPage.pagination.nextCursor,
     initialPageParam: null as string | null,
-    enabled,
+    enabled: enabled && !!endpoint,
+    staleTime,
+    gcTime,
   });
 };

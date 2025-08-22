@@ -10,9 +10,7 @@ export const useInfiniteAdvocates = ({
   limit = 100,
   enabled = true,
 }: UseInfiniteAdvocatesParams = {}) => {
-  return useInfiniteApiQuery<Advocate>({
-    queryKey: ['advocates', 'infinite'],
-    endpoint: '/api/advocates',
+  return useInfiniteApiQuery<Advocate>('/api/advocates', {
     limit,
     enabled,
   });
