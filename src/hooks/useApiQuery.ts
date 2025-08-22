@@ -5,7 +5,7 @@ interface UseApiQueryOptions<TData, TError = Error> extends Omit<UseQueryOptions
     enabled?: boolean;
     refetchOnWindowFocus?: boolean;
     staleTime?: number;
-    cacheTime?: number;
+    gcTime?: number;
 }
 
 export function useApiQuery<TData>(
